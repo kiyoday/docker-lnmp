@@ -9,7 +9,9 @@ networks:
 services:
 
   php-fpm:
-    image: php:7.2-fpm
+    build:
+      context: ./file/php
+      dockerfile: Dockerfile
     ports:
       - 9000:9000
     networks:
@@ -17,7 +19,6 @@ services:
     restart: always
     volumes:
       - ./html:/usr/share/nginx/html:rw
-    command: php-fpm
 
   nginx:
     image: nginx
