@@ -1,0 +1,47 @@
+version: '3'
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+services:
+
+  php-fpm:
+    image: php:7.2-fpm
+    ports:
+      - 9000:9000
+    networks:
+      - backend
+    restart: always
+    volumes:
+      - ./html:/usr/share/nginx/html:rw
+    command: php-fpm
+
+  nginx:
+    image: nginx
+    restart: always
+    depends_on:
+      - db
+      - php-fpm
+    ports:
+        - 8080:80
+    networks:
+        - backend
+    volumes:
+        - ./html:/usr/share/nginx/html:rw
+        - ./conf.d:/etc/nginx/conf.d:rw
+    command: [nginx-debug, '-g', 'daemon off;']
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 3307:3306
+    networks:
+      - backend
+    volumes:
+      - ./db/data/mysql:/var/lib/mysql
