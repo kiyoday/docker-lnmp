@@ -46,3 +46,11 @@ services:
       - backend
     volumes:
       - ./db/data/mysql:/var/lib/mysql
+
+  redis:
+    image: daocloud.io/library/redis
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - ./db/redis/:/data
